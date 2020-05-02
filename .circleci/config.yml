@@ -23,6 +23,8 @@ jobs:
       - run:
           name: Report results to DeepSource
           command: |
+            cd some_dir
+            pwd
             # Install DeepSource CLI
             curl https://deepsource.io/cli | sh
 
