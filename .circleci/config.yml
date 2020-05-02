@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  test-analyzer:
+    docker:
+      - image: circleci/python:3.7
+
+    environment:
+      DEEPSOURCE_DSN: tobedefined
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: make install_dep
+
+      - run:
+          name: Run tests
+          command: make test-ci
+
+      - run:
+          name: Report results to DeepSource
+          command: |
+            # Install DeepSource CLI
+            curl https://deepsource.io/cli | sh
+
+            # Report coverage artifact to the 'test-coverage' analyzer
+            ./bin/deepsource report --analyzer test-coverage --key python --value-file ./coverage.xml
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-analyzer
